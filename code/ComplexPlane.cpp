@@ -1,3 +1,6 @@
+// last 3 functions, I have no idea...I hate math
+// The rest I did, but obviosuly if I did something wrong, just change it
+
 #include "ComplexPlane.h"
 #include <cmath>
 #include <iostream>
@@ -10,11 +13,11 @@ ComplexPlane::ComplexPlane(int pixelWidth, int pixelHeight)
     m_pixelWidth = pixelWidth;
     m_pixelHeight = pixelHeight;
     
-    // Calculate and assign the aspect ratio of the monitor, m_aspectRatio
-
+    // Calculate and assign the aspect ratio of the monitor, m_aspectRatio - makes sure it outputs a float
+    m_aspectRatio = static_cast<float>(m_pixelHeight) / static_cast<float>(m_pixelWidth);
   
-    // Assign m_plane_center with {0,0}
-
+    // Assign m_plane_center with {0,0} - float of 0.0
+    m_plane_center = { 0.0f, 0.0f };
   
     // Assign m_plane_size with {BASE_WIDTH, BASE_HEIGHT * m_aspectRatio}
     m_plane_size = { BASE_WIDTH, BASE_HEIGHT * m_aspectRatio };
@@ -25,9 +28,8 @@ ComplexPlane::ComplexPlane(int pixelWidth, int pixelHeight)
     // Assign m_State with State::CALCULATING to be ready for the initial screen
     m_State = State::CALCULATING;
 
-    // Initialize VertexArray
-    // We will use this to draw a color for each pixel
-
+    // Initialize VertexArray - draws color for each pixel - set primitive type to Points
+    m_vArray.setPrimitiveType(Points);
   
     // Resize it to pixelWidth * pixelHeight
     m_vArray.resize(m_pixelWidth * m_pixelHeight);
@@ -45,7 +47,28 @@ void ComplexPlane::updateRender()
     if (m_State == State::CALCULATING)
     {
       // Create a double for loop to loop through all pixels in the screen height and width
-      for ()
+      for (int i = 0; i < m_pixelHeight; ++i)
+      {
+        for (int j = 0; j < m_pixelWidth; ++j)
+        {
+          /* Set the position variable in the element of VertexArray that corresponds to the screen coordinate j,i 
+            mapping the two-dimensional position at j,i to its 1D array */
+          vArray[j + i * pixelWidth].position = { (float)j,(float)i }
+             
+          // Use ComplexPlane::mapPixelToCoords to find the Vector2f coordinate in the complex plane
+          Vector2f coord = mapPixelToCoords(Vector2i(j, i));
+            
+          // Call ComplexPlane::countIterations with the Vector2f coordinate as its argument
+          size_t iterations = countIterations(coord);
+        
+          // store the RGB values for the current pixel
+          Uint8 r, g, b;
+        
+          // pass iterations & RGB values by reference
+          iterationsToRGB(iterations, r, g, b);
+
+          // Set the color variable in the element of VertexArray that corresponds to the screen coordinate j,i
+          m_vArray[j + i * m_pixelWidth].color = { r, g, b };
     }
   
     // Set the state to DISPLAYING
@@ -93,13 +116,21 @@ void ComplexPlane::zoomOut()
 // set center of complex plane based on pixel location of click
 void ComplexPlane::setCenter(Vector2i mousePixel)
 {
-  
+    // Use ComplexPlane::mapPixelToCoords to find the Vector2f coordinate in the complex plane
+    Vector2f coords = mapPixelToCoords(mousePixel);
+
+    // Assign m_plane_center with this coordinate
+    m_plane_center = coords;
+
+    // Set m_State to CALCULATING
+    m_State = State::CALCULATING;
 }
 
 // set mouse location based on pixel location
 void ComplexPlane::setMouseLocation(Vector2i mousePixel)
 {
-  
+    // Use ComplexPlane::mapPixelToCoords to find the Vector2f coordinate in the complex plane
+    m_mouseLocation = mapPixelToCoords(mousePixel);
 }
 
 // load text with information about the current state
