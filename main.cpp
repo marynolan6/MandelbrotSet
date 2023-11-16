@@ -1,3 +1,5 @@
+// Line 85. Unsure about how to do
+
 #include "ComplexPlane.h"
 #include <iostream>
 
@@ -17,8 +19,7 @@ VideoMode vm(pixelWidth, pixelHeight);
 RenderWindow window(vm, "Mandelbrot", Style::Default);
 
 //Construct ComplexPlane object here
-
-
+ComplexPlane complexPlane(pixelWidth, pixelHeight);
 
 //Load font //Can change later if you want
 Font font;
@@ -58,24 +59,29 @@ while (window.isOpen())
 	    {
 		if (event.mouseButton.button == sf::Mouse::Left)
 		{
-		    std::cout << "the left button was pressed" << std::endl;
-		    std::cout << "mouse x: " << event.mouseButton.x << std::endl;
-		    std::cout << "mouse y: " << event.mouseButton.y << std::endl;
+		    cout << "the left button was pressed" << endl;
+		    cout << "mouse x: " << event.mouseButton.x << endl;
+		    cout << "mouse y: " << event.mouseButton.y << endl;
 
                     /*zoomIn and call setCenter on 
                     the ComplexPlane object with the 
                     (x,y) pixel location of the mouse click*/
+		    complexPlane.zoomIn();
+                    complexPlane.setCenter(Vector2i(event.mouseButton.x, event.mouseButton.y));
 
 		}
+		// same for left except zoomOut
                 else if (event.mouseButton.button == sf::Mouse::Right)
                 {
-                    std::cout << "the right button was pressed" << std::endl;
-		    std::cout << "mouse x: " << event.mouseButton.x << std::endl;
-		    std::cout << "mouse y: " << event.mouseButton.y << std::endl;
-
+		    cout << "the right button was pressed" << endl;
+		    cout << "mouse x: " << event.mouseButton.x << endl;
+		    cout << "mouse y: " << event.mouseButton.y << endl;
+			
                     /*zoomOut and call setCenter on 
                     the ComplexPlane object with the 
                     (x,y) pixel location of the mouse click*/
+		    complexPlane.zoomOut();
+ 		    complexPlane.setCenter(Vector2i(event.mouseButton.x, event.mouseButton.y));
                 }
 
                 //Set state to CALCULATING here
@@ -88,39 +94,41 @@ while (window.isOpen())
             {
                 /*Call setMouseLocation on the ComplexPlane object 
                 to store the (x,y) pixel location of the mouse click*/
+		complexPlane.setMouseLocation(Vector2i(event.mouseMove.x, event.mouseMove.y));
+
 	    }
 		
-		
-		}
+	}
 
         //Check if Keyboard::isKeyPressed(Keyboard::Escape) to close the window
 	if (Keyboard::isKeyPressed(Keyboard::Escape))
 	{
 		window.close();
 	}
-
-
 /*
 	****************************************
 	Update the scene
 	****************************************
 */
 
-/*Call updateRender on the ComplexPlane object
-Call loadText on the ComplexPlane object*/
-
+	//Call updateRender on the ComplexPlane object
+	complexPlane.updateRender();
+	//Call loadText on the ComplexPlane object
+	complexPlane.loadText(text);
 /*
 	****************************************
 	Draw the scene
 	****************************************
 */
 
-/*Clear the RenderWindow object
-draw the ComplexPlane object
-draw the Text object
-Display the RenderWindow object*/
-
-
+	//Clear the RenderWindow object
+	window.clear();
+	// draw the ComplexPlane object
+	window.draw(complexPlane);
+	//draw the Text object
+	window.draw(text);
+	//Display the RenderWindow object
+	window.display();
 
 //End of window.isOpen() loop
 }
