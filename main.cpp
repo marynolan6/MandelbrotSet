@@ -51,53 +51,53 @@ while (window.isOpen())
 		while (window.pollEvent(event))
 		{
             //Close window if event is closed
-			if (event.type == sf::Event::Closed) window.close();
+	    if (event.type == sf::Event::Closed) window.close();
 
             //Zoom in and zoom out
-			if (event.type == sf::Event::MouseButtonPressed)
-			{
-				if (event.mouseButton.button == sf::Mouse::Left)
-				{
-					std::cout << "the left button was pressed" << std::endl;
-					std::cout << "mouse x: " << event.mouseButton.x << std::endl;
-					std::cout << "mouse y: " << event.mouseButton.y << std::endl;
+	    if (event.type == sf::Event::MouseButtonPressed)
+	    {
+		if (event.mouseButton.button == sf::Mouse::Left)
+		{
+		    std::cout << "the left button was pressed" << std::endl;
+		    std::cout << "mouse x: " << event.mouseButton.x << std::endl;
+		    std::cout << "mouse y: " << event.mouseButton.y << std::endl;
 
                     /*zoomIn and call setCenter on 
                     the ComplexPlane object with the 
                     (x,y) pixel location of the mouse click*/
 
-				}
+		}
                 else if (event.mouseButton.button == sf::Mouse::Right)
                 {
                     std::cout << "the right button was pressed" << std::endl;
-					std::cout << "mouse x: " << event.mouseButton.x << std::endl;
-					std::cout << "mouse y: " << event.mouseButton.y << std::endl;
+		    std::cout << "mouse x: " << event.mouseButton.x << std::endl;
+		    std::cout << "mouse y: " << event.mouseButton.y << std::endl;
 
                     /*zoomOut and call setCenter on 
                     the ComplexPlane object with the 
                     (x,y) pixel location of the mouse click*/
-
                 }
 
                 //Set state to CALCULATING here
 
 
 
-			}
+	    }
 
             if (event.type == sf::Event::MouseMoved)
             {
                 /*Call setMouseLocation on the ComplexPlane object 
                 to store the (x,y) pixel location of the mouse click*/
-
-            }
+	    }
+		
+		
 		}
 
         //Check if Keyboard::isKeyPressed(Keyboard::Escape) to close the window
-		if (Keyboard::isKeyPressed(Keyboard::Escape))
-		{
-			window.close();
-		}
+	if (Keyboard::isKeyPressed(Keyboard::Escape))
+	{
+		window.close();
+	}
 
 
 /*
