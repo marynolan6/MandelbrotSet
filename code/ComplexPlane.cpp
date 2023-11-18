@@ -7,7 +7,10 @@ some of the parts that were underlined in red*/
 #include "ComplexPlane.h"
 #include <cmath>
 #include <iostream>
+#include <complex>
 #include <sstream>
+
+using namespace std;
 
 // constructor
 ComplexPlane::ComplexPlane(int pixelWidth, int pixelHeight)
@@ -161,7 +164,44 @@ void ComplexPlane::loadText(Text& text)
 // helper function: counts iterations for given coordinate
 int ComplexPlane::countIterations(Vector2f coord)
 {
-  //Given coord, count the number of iterations. 
+  //Given coord, count the number of iterations using the equation. 
+  //zi+1 = zi^2 + c, where c is a + bi
+  //coord = (a, b)
+  //absolute value of z cannot exceed 2.0 and i cannot exceed 64 iterations
+
+  // holds number of iterations
+  int i = 0;
+
+  //bool value to tell if z > 2.0;
+  bool over2 = false;
+
+  //getting the real and imaginary components
+  double re = coord.x;
+  double im = coord.y;
+
+  //defining them as complex numbers
+  complex<double> c (re,im);
+
+  //defining the z value
+  complex<double> z (0,0);
+
+  //loop to go over iterations
+  while (!over2 && i <= MAX_ITER)
+  {
+    z = z*z + c;
+
+    if (abs(z) > 2.0)
+    {
+        over2 = true;
+    }
+    else
+    {
+        i++;
+    }
+  }
+
+  return i;
+
 }
 
 // helper function: maps iteration count to RGB color
