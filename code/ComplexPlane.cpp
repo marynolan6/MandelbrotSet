@@ -1,3 +1,6 @@
+/*I switched around the i and j in the for loop of updateRender() and fixed
+some of the parts that were underlined in red*/
+
 // last 3 functions, I have no idea...I hate math
 // The rest I did, but obviosuly if I did something wrong, just change it
 
@@ -47,13 +50,13 @@ void ComplexPlane::updateRender()
     if (m_State == State::CALCULATING)
     {
       // Create a double for loop to loop through all pixels in the screen height and width
-      for (int i = 0; i < m_pixelHeight; ++i)
+      for (int j = 0; j < m_pixelHeight; ++j)
       {
-        for (int j = 0; j < m_pixelWidth; ++j)
+        for (int i = 0; i < m_pixelWidth; ++i)
         {
           /* Set the position variable in the element of VertexArray that corresponds to the screen coordinate j,i 
             mapping the two-dimensional position at j,i to its 1D array */
-          vArray[j + i * pixelWidth].position = { (float)j,(float)i }
+          m_vArray[j + i * m_pixelWidth].position = { (float)j,(float)i };
              
           // Use ComplexPlane::mapPixelToCoords to find the Vector2f coordinate in the complex plane
           Vector2f coord = mapPixelToCoords(Vector2i(j, i));
@@ -69,10 +72,13 @@ void ComplexPlane::updateRender()
 
           // Set the color variable in the element of VertexArray that corresponds to the screen coordinate j,i
           m_vArray[j + i * m_pixelWidth].color = { r, g, b };
+        }
+      }
+      // Set the state to DISPLAYING
+      m_State = State::DISPLAYING;
     }
   
-    // Set the state to DISPLAYING
-    m_State = State::DISPLAYING;
+    
 }
 
 // zoomIn
@@ -155,7 +161,7 @@ void ComplexPlane::loadText(Text& text)
 // helper function: counts iterations for given coordinate
 int ComplexPlane::countIterations(Vector2f coord)
 {
-  
+  //Given coord, count the number of iterations. 
 }
 
 // helper function: maps iteration count to RGB color
