@@ -207,7 +207,44 @@ int ComplexPlane::countIterations(Vector2f coord)
 // helper function: maps iteration count to RGB color
 void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b)
 {
-  
+  //Setting up the colors based on the number of iterations (count)
+  //using the color examples the prof gave to us but we can change it later if we want
+  if (count = MAX_ITER) //At 64 iterations color pixel black
+  {
+    r = 0;
+    g = 0;
+    b = 0;
+  }
+  else if (count > 59) // red for high iteration counts
+  {
+    r = 255;
+    g = 0;
+    b = 55;
+  }
+  else if (count > 41) //Yellow
+  {
+    r = 255;
+    g = 247;
+    b = 0;
+  }
+  else if (count > 23) //Green
+  {
+    r = 13;
+    g = 255;
+    b = 0;
+  }
+  else if (count > 5) //Turqouise
+  {
+    r = 0;
+    g = 255;
+    b = 187;
+  }
+  else if (count >= 0) //purple for low iteration counts
+  {
+    r = 111;
+    g = 0;
+    b = 255;
+  }
 }
 
 // helper function: maps pixel location to complex plane coordinates
