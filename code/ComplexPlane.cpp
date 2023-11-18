@@ -1,5 +1,13 @@
-/*I switched around the i and j in the for loop of updateRender() and fixed
-some of the parts that were underlined in red*/
+/*
+- I switched around the i and j in the for loop of updateRender(), just in the 
+  header where theyre initialized. I'm not 100% sure if thats right but he said j was x and 
+  i was y so that's why I did it. We can change it back if its wrong
+- fixed some of the parts that were underlined in red.
+- Added in the last three functions
+- Added Juice File
+- The terminal was giving a warning on line 196 bc it was comparing an int i
+  with the unsigned int MAX_ITER so i changed it from returning int to returning unsigned int
+*/
 
 // last 3 functions, I have no idea...I hate math
 // The rest I did, but obviosuly if I did something wrong, just change it
@@ -162,7 +170,7 @@ void ComplexPlane::loadText(Text& text)
 }
 
 // helper function: counts iterations for given coordinate
-int ComplexPlane::countIterations(Vector2f coord)
+unsigned int ComplexPlane::countIterations(Vector2f coord)
 {
   //Given coord, count the number of iterations using the equation. 
   //zi+1 = zi^2 + c, where c is a + bi
@@ -170,7 +178,7 @@ int ComplexPlane::countIterations(Vector2f coord)
   //absolute value of z cannot exceed 2.0 and i cannot exceed 64 iterations
 
   // holds number of iterations
-  int i = 0;
+  unsigned int i = 0;
 
   //bool value to tell if z > 2.0;
   bool over2 = false;
@@ -209,7 +217,7 @@ void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b)
 {
   //Setting up the colors based on the number of iterations (count)
   //using the color examples the prof gave to us but we can change it later if we want
-  if (count = MAX_ITER) //At 64 iterations color pixel black
+  if (count == MAX_ITER) //At 64 iterations color pixel black
   {
     r = 0;
     g = 0;

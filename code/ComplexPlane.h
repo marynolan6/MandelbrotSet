@@ -40,7 +40,7 @@ class ComplexPlane : public sf::Drawable
      virtual void draw(RenderTarget& target, RenderStates states) const;
 
      // helper functions
-     int countIterations(Vector2f coord);
+     unsigned int countIterations(Vector2f coord);
      void iterationsToRGB(size_t count, Uint8& r, Uint8& g, sf::Uint8& b);
      Vector2f mapPixelToCoords(Vector2i mousePixel);
 
