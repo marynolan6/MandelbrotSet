@@ -250,6 +250,22 @@ void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b)
 // helper function: maps pixel location to complex plane coordinates
 Vector2f ComplexPlane::mapPixelToCoords(Vector2i mousePixel)
 {
-  
-}
+  //((n-a)/(b-a))*(d-c)+c
+  Vector2f resultCoord;
 
+  //n is the mouse pixel in x or y direction
+  //[a,b] is the range of display pixels in x or y direction
+  //Ex. [a,b] = [0,1920] in x direction
+  //[c,d] is the range of the imaginary plane
+  //Ex. [c,d] = [-2,2]
+
+
+  //Calculating in x direction
+  resultCoord.x = ((mousePixel.x - 0) / (1920 - 0)) * (m_plane_size.x) + (m_plane_center.x - m_plane_size.x /2.0);
+
+  //Calculating in y direction
+  resultCoord.x = ((mousePixel.y - 1080) / (0 - 1080)) * (m_plane_size.y) + (m_plane_center.y - m_plane_size.y /2.0);
+
+
+  return resultCoord;
+}

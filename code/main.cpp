@@ -1,6 +1,7 @@
 // Line 85. Unsure about how to do
 
 #include "ComplexPlane.h"
+#include "ComplexPlane.cpp"
 #include <iostream>
 
 using namespace sf;
@@ -49,58 +50,55 @@ while (window.isOpen())
 	****************************************
 */
     Event event;
-		while (window.pollEvent(event))
-		{
-            //Close window if event is closed
+	while (window.pollEvent(event))
+	{
+        //Close window if event is closed
 	    if (event.type == sf::Event::Closed) window.close();
 
-            //Zoom in and zoom out
+        //Zoom in and zoom out
 	    if (event.type == sf::Event::MouseButtonPressed)
 	    {
-		if (event.mouseButton.button == sf::Mouse::Left)
-		{
-		    cout << "the left button was pressed" << endl;
-		    cout << "mouse x: " << event.mouseButton.x << endl;
-		    cout << "mouse y: " << event.mouseButton.y << endl;
+			if (event.mouseButton.button == sf::Mouse::Left)
+			{
+				cout << "the left button was pressed" << endl;
+				cout << "mouse x: " << event.mouseButton.x << endl;
+				cout << "mouse y: " << event.mouseButton.y << endl;
 
-                    /*zoomIn and call setCenter on 
-                    the ComplexPlane object with the 
-                    (x,y) pixel location of the mouse click*/
-		    complexPlane.zoomIn();
-                    complexPlane.setCenter(Vector2i(event.mouseButton.x, event.mouseButton.y));
+				/*zoomIn and call setCenter on 
+				the ComplexPlane object with the 
+				(x,y) pixel location of the mouse click*/
+				complexPlane.zoomIn();
+				complexPlane.setCenter(Vector2i(event.mouseButton.x, event.mouseButton.y));
 
-		}
-		// same for left except zoomOut
-                else if (event.mouseButton.button == sf::Mouse::Right)
-                {
-		    cout << "the right button was pressed" << endl;
-		    cout << "mouse x: " << event.mouseButton.x << endl;
-		    cout << "mouse y: " << event.mouseButton.y << endl;
-			
-                    /*zoomOut and call setCenter on 
-                    the ComplexPlane object with the 
-                    (x,y) pixel location of the mouse click*/
-		    complexPlane.zoomOut();
- 		    complexPlane.setCenter(Vector2i(event.mouseButton.x, event.mouseButton.y));
-                }
+			}
+			// same for left except zoomOut
+			else if (event.mouseButton.button == sf::Mouse::Right)
+			{
+				cout << "the right button was pressed" << endl;
+				cout << "mouse x: " << event.mouseButton.x << endl;
+				cout << "mouse y: " << event.mouseButton.y << endl;
+					
+				/*zoomOut and call setCenter on 
+				the ComplexPlane object with the 
+				(x,y) pixel location of the mouse click*/
+				complexPlane.zoomOut();
+				complexPlane.setCenter(Vector2i(event.mouseButton.x, event.mouseButton.y));
+			}
 
-                //Set state to CALCULATING here
-
-
-
+			//Set state to CALCULATING here
+			ComplexPlane::State::CALCULATING;
 	    }
 
-            if (event.type == sf::Event::MouseMoved)
-            {
-                /*Call setMouseLocation on the ComplexPlane object 
-                to store the (x,y) pixel location of the mouse click*/
+        if (event.type == sf::Event::MouseMoved)
+        {
+        /*Call setMouseLocation on the ComplexPlane object 
+        to store the (x,y) pixel location of the mouse click*/
 		complexPlane.setMouseLocation(Vector2i(event.mouseMove.x, event.mouseMove.y));
-
 	    }
 		
 	}
 
-        //Check if Keyboard::isKeyPressed(Keyboard::Escape) to close the window
+    //Check if Keyboard::isKeyPressed(Keyboard::Escape) to close the window
 	if (Keyboard::isKeyPressed(Keyboard::Escape))
 	{
 		window.close();
