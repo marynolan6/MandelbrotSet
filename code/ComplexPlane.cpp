@@ -15,7 +15,7 @@
 #include "ComplexPlane.h"
 #include <cmath>
 #include <iostream>
-#include <complex>
+// dont need #include <complex>
 #include <sstream>
 
 using namespace std;
@@ -87,9 +87,7 @@ void ComplexPlane::updateRender()
       }
       // Set the state to DISPLAYING
       m_State = State::DISPLAYING;
-    }
-  
-    
+    }   
 }
 
 // zoomIn
@@ -212,68 +210,77 @@ unsigned int ComplexPlane::countIterations(Vector2f coord)
 
 }
 
-// helper function: maps iteration count to RGB color
+// Helper function: maps iteration count to RGB color
 void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b)
 {
-  //Setting up the colors based on the number of iterations (count)
-  //using the color examples the prof gave to us but we can change it later if we want
-  if (count == MAX_ITER) //At 64 iterations color pixel black
-  {
-    r = 0;
-    g = 0;
-    b = 0;
-  }
-  else if (count > 59) // red for high iteration counts
-  {
-    r = 255;
-    g = 0;
-    b = 55;
-  }
-  else if (count > 41) //Yellow
-  {
-    r = 255;
-    g = 247;
-    b = 0;
-  }
-  else if (count > 23) //Green
-  {
-    r = 13;
-    g = 255;
-    b = 0;
-  }
-  else if (count > 5) //Turqouise
-  {
-    r = 0;
-    g = 255;
-    b = 187;
-  }
-  else if (count >= 0) //purple for low iteration counts
-  {
-    r = 111;
-    g = 0;
-    b = 255;
-  }
-}
+    // Check if the maximum iterations are reached
+    if (count == MAX_ITER)
+    {
+        r = 0;
+        g = 0;
+        b = 0; // Black color
+        return;
+    }
 
+    // Define color regions
+    const size_t regionCount = 5;
+    const size_t regionSize = MAX_ITER / regionCount;
+
+    // Determine the region for the given iteration count
+    size_t region = count / regionSize;
+
+    // Map iteration count to RGB color based on the region
+    switch (region)
+    {
+    case 0:
+        // black color outer picture
+        r = 0;
+        g = 0;
+        b = 0;
+        break;
+    case 1:
+        // Red region
+        r = 255;
+        g = 0;
+        b = 55;
+        break;
+    case 2:
+        // Yellow region
+        r = 255;
+        g = 247;
+        b = 0;
+    case 3:
+        // Green region
+        r = 13;
+        g = 255;
+        b = 0;
+        break;
+    case 4:
+        // Turquoise region
+        r = 0;
+        g = 255;
+        b = 187;
+        break;
+    default:
+        // Purple/blue region
+        r = 111;
+        g = 0;
+        b = 255;
+        break;
+    }
+}
 // helper function: maps pixel location to complex plane coordinates
 Vector2f ComplexPlane::mapPixelToCoords(Vector2i mousePixel)
 {
-  //((n-a)/(b-a))*(d-c)+c
-  Vector2f resultCoord;
+    // Calculate the normalized coordinates within the pixel range [0, pixelWidth] and [0, pixelHeight]
+    float normalizedX = static_cast<float>(mousePixel.x) / m_pixelWidth;
+    float normalizedY = static_cast<float>(mousePixel.y) / m_pixelHeight;
 
-  //n is the mouse pixel in x or y direction
-  //[a,b] is the range of display pixels in x or y direction
-  //Ex. [a,b] = [0,1920] in x direction
-  //[c,d] is the range of the imaginary plane
-  //Ex. [c,d] = [-2,2]
+    // Calculate the coordinates within the specified complex plane range of real/imag
+    // m_plane_size.y=height - 1.0f - normalizedY=increase from top to bottom - 
+    // m_plane_center.x - m_plane_size.x / 2.0f=substracting half of plane's height
+    float real = ((normalizedX) * m_plane_size.x) + (m_plane_center.x - m_plane_size.x / 2.0f);
+    float imag = ((1.0f - normalizedY) * m_plane_size.y) + (m_plane_center.y - m_plane_size.y / 2.0f);
 
-
-  //Calculating in x direction
-  resultCoord.x = ((mousePixel.x - 0) / (1920 - 0)) * (m_plane_size.x) + (m_plane_center.x - m_plane_size.x /2.0);
-
-  //Calculating in y direction
-  resultCoord.x = ((mousePixel.y - 1080) / (0 - 1080)) * (m_plane_size.y) + (m_plane_center.y - m_plane_size.y /2.0);
-
-
-  return resultCoord;
+    return Vector2f(real, imag);
 }
