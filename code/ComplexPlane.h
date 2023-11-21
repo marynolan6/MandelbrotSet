@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <thread>
 
 // make code easier to type with "using namespace"
 using namespace sf;
@@ -35,12 +36,16 @@ class ComplexPlane : public sf::Drawable
      void loadText(Text& text);
      void updateRender();
 
+     //
+     void processRow(int i);
+
    private:
      // overridden draw function
      virtual void draw(RenderTarget& target, RenderStates states) const;
 
      // helper functions
      unsigned int countIterations(Vector2f coord);
+     //sf::Thread m_thread;
      void iterationsToRGB(size_t count, Uint8& r, Uint8& g, sf::Uint8& b);
      Vector2f mapPixelToCoords(Vector2i mousePixel);
 

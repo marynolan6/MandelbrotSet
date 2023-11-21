@@ -41,18 +41,12 @@ void ComplexPlane::draw(RenderTarget& target, RenderStates states) const
     target.draw(m_vArray);
 }
 
-// updating the rendering of the Mandelbrot set
-void ComplexPlane::updateRender()
+void ComplexPlane::processRow(int i)
 {
-    if (m_State == State::CALCULATING)
-    {
-      // Create a double for loop to loop through all pixels in the screen height and width
-        for (int i = 0; i < m_pixelHeight; ++i)
+       for (int j = 0; j < m_pixelWidth; ++j)
         {
-            for (int j = 0; j < m_pixelWidth; ++j)
-        {
-          /* Set the position variable in the element of VertexArray that corresponds to the screen coordinate j,i 
-            mapping the two-dimensional position at j,i to its 1D array */
+          // Set the position variable in the element of VertexArray that corresponds to the screen coordinate j,i 
+          // mapping the two-dimensional position at j,i to its 1D array 
           m_vArray[j + i * m_pixelWidth].position = { (float)j,(float)i };
              
           // Use ComplexPlane::mapPixelToCoords to find the Vector2f coordinate in the complex plane
@@ -70,7 +64,53 @@ void ComplexPlane::updateRender()
           // Set the color variable in the element of VertexArray that corresponds to the screen coordinate j,i
           m_vArray[j + i * m_pixelWidth].color = { r, g, b };
         }
-      }
+}
+
+// updating the rendering of the Mandelbrot set
+void ComplexPlane::updateRender()
+{
+    //sf::Thread thread(&ComplexPlane::countIterations);
+    //thread.launch();
+
+    if (m_State == State::CALCULATING)
+    {
+        for(int i = 0; i < m_pixelHeight; i+=4)
+        {
+            thread t1(&ComplexPlane::processRow, *this, i);
+            thread t2(&ComplexPlane::processRow, *this, i+1);
+            thread t3(&ComplexPlane::processRow, *this, i+2);
+            thread t4(&ComplexPlane::processRow, *this, i+3);
+            t1.join();
+            t2.join();
+            t3.join();
+            t4.join();
+
+        }
+      // Create a double for loop to loop through all pixels in the screen height and width
+        /*for (int i = 0; i < m_pixelHeight; ++i)
+        {
+            for (int j = 0; j < m_pixelWidth; ++j)
+        {
+          // Set the position variable in the element of VertexArray that corresponds to the screen coordinate j,i 
+          // mapping the two-dimensional position at j,i to its 1D array 
+          m_vArray[j + i * m_pixelWidth].position = { (float)j,(float)i };
+             
+          // Use ComplexPlane::mapPixelToCoords to find the Vector2f coordinate in the complex plane
+          Vector2f coord = mapPixelToCoords(Vector2i(j, i));
+            
+          // Call ComplexPlane::countIterations with the Vector2f coordinate as its argument
+          size_t iterations = countIterations(coord);
+        
+          // store the RGB values for the current pixel
+          Uint8 r, g, b;
+        
+          // pass iterations & RGB values by reference
+          iterationsToRGB(iterations, r, g, b);
+
+          // Set the color variable in the element of VertexArray that corresponds to the screen coordinate j,i
+          m_vArray[j + i * m_pixelWidth].color = { r, g, b };
+        }
+      }*/
       // Set the state to DISPLAYING
       m_State = State::DISPLAYING;
     }   

@@ -7,8 +7,8 @@ using namespace std;
 int main()
 {
 //Get desktop resolution:
-int pixelWidth = VideoMode::getDesktopMode().width / 2;
-int pixelHeight = VideoMode::getDesktopMode().height / 2;
+int pixelWidth = VideoMode::getDesktopMode().width;
+int pixelHeight = VideoMode::getDesktopMode().height;
 
 //Construct VideoMode object vm
 VideoMode vm(pixelWidth, pixelHeight);
@@ -18,6 +18,10 @@ RenderWindow window(vm, "Mandelbrot", Style::Default);
 
 //Construct ComplexPlane object here
 ComplexPlane complexPlane(pixelWidth, pixelHeight);
+
+//
+//sf::Thread thread(&ComplexPlane::updateRender, &complexPlane);
+//thread.launch();
 
 //Load font //Can change later if you want
 Font font;
