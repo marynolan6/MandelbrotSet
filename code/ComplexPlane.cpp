@@ -154,7 +154,7 @@ void ComplexPlane::loadText(Text& text)
 }
 
 // helper function: counts iterations for given coordinate
-int ComplexPlane::countIterations(Vector2f coord)
+unsigned int ComplexPlane::countIterations(Vector2f coord)
 {
     // the real and imaginary parts of the complex number
     float real = coord.x;
