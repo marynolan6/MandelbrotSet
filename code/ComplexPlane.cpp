@@ -1,17 +1,3 @@
-/*
-- I switched around the i and j in the for loop of updateRender(), just in the 
-  header where theyre initialized. I'm not 100% sure if thats right but he said j was x and 
-  i was y so that's why I did it. We can change it back if its wrong
-- fixed some of the parts that were underlined in red.
-- Added in the last three functions
-- Added Juice File
-- The terminal was giving a warning on line 196 bc it was comparing an int i
-  with the unsigned int MAX_ITER so i changed it from returning int to returning unsigned int
-*/
-
-// last 3 functions, I have no idea...I hate math
-// The rest I did, but obviosuly if I did something wrong, just change it
-
 #include "ComplexPlane.h"
 #include <cmath>
 #include <iostream>
