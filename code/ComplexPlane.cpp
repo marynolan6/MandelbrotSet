@@ -61,9 +61,9 @@ void ComplexPlane::updateRender()
     if (m_State == State::CALCULATING)
     {
       // Create a double for loop to loop through all pixels in the screen height and width
-      for (int j = 0; j < m_pixelHeight; ++j)
-      {
-        for (int i = 0; i < m_pixelWidth; ++i)
+        for (int i = 0; i < m_pixelHeight; ++i)
+        {
+            for (int j = 0; j < m_pixelWidth; ++j)
         {
           /* Set the position variable in the element of VertexArray that corresponds to the screen coordinate j,i 
             mapping the two-dimensional position at j,i to its 1D array */
@@ -168,46 +168,39 @@ void ComplexPlane::loadText(Text& text)
 }
 
 // helper function: counts iterations for given coordinate
-unsigned int ComplexPlane::countIterations(Vector2f coord)
+size_t ComplexPlane::countIterations(Vector2f coord)
 {
-  //Given coord, count the number of iterations using the equation. 
-  //zi+1 = zi^2 + c, where c is a + bi
-  //coord = (a, b)
-  //absolute value of z cannot exceed 2.0 and i cannot exceed 64 iterations
+    // the real and imaginary parts of the complex number
+    float real = coord.x;
+    float imag = coord.y;
 
-  // holds number of iterations
-  unsigned int i = 0;
+    // initial values of the real and imaginary parts,
+    float realTemp = real;
+    float imagTemp = imag;
 
-  //bool value to tell if z > 2.0;
-  bool over2 = false;
-
-  //getting the real and imaginary components
-  double re = coord.x;
-  double im = coord.y;
-
-  //defining them as complex numbers
-  complex<double> c (re,im);
-
-  //defining the z value
-  complex<double> z (0,0);
-
-  //loop to go over iterations
-  while (!over2 && i <= MAX_ITER)
-  {
-    z = z*z + c;
-
-    if (abs(z) > 2.0)
+    // Iterate until the escape condition is met or until reaching MAX_ITER
+    size_t iterations = 0;
+    while (iterations < MAX_ITER)
     {
-        over2 = true;
-    }
-    else
-    {
-        i++;
-    }
-  }
+        // multiple squares of the real and imaginary parts
+        float realSquared = real * real;
+        float imagSquared = imag * imag;
 
-  return i;
+        // check if the complex number is escaping
+        if (realSquared + imagSquared > 4.0)
+        {
+            break; // escape condition is met
+        }
 
+        // mandelbrot formula to update complex numbwr
+        imag = 2.0 * real * imag + imagTemp;
+        real = realSquared - imagSquared + realTemp;
+
+        // increments iteration count
+        iterations++;
+    }
+    // used for coloring in the rendering process
+    return iterations;
 }
 
 // Helper function: maps iteration count to RGB color
