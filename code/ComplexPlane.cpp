@@ -43,6 +43,7 @@ void ComplexPlane::draw(RenderTarget& target, RenderStates states) const
 
 void ComplexPlane::processRow(int i)
 {
+    cout << i << endl;
        for (int j = 0; j < m_pixelWidth; ++j)
         {
           // Set the position variable in the element of VertexArray that corresponds to the screen coordinate j,i 
@@ -69,12 +70,14 @@ void ComplexPlane::processRow(int i)
 // updating the rendering of the Mandelbrot set
 void ComplexPlane::updateRender()
 {
+    unsigned int nthreads = std::thread::hardware_concurrency();
+    cout << nthreads << endl;
     //sf::Thread thread(&ComplexPlane::countIterations);
     //thread.launch();
 
     if (m_State == State::CALCULATING)
     {
-        for(int i = 0; i < m_pixelHeight; i+=4)
+        /*for(int i = 0; i < m_pixelHeight; i+=3)
         {
             thread t1(&ComplexPlane::processRow, *this, i);
             thread t2(&ComplexPlane::processRow, *this, i+1);
@@ -85,9 +88,9 @@ void ComplexPlane::updateRender()
             t3.join();
             t4.join();
 
-        }
+        }*/
       // Create a double for loop to loop through all pixels in the screen height and width
-        /*for (int i = 0; i < m_pixelHeight; ++i)
+        for (int i = 0; i < m_pixelHeight; ++i)
         {
             for (int j = 0; j < m_pixelWidth; ++j)
         {
@@ -110,7 +113,7 @@ void ComplexPlane::updateRender()
           // Set the color variable in the element of VertexArray that corresponds to the screen coordinate j,i
           m_vArray[j + i * m_pixelWidth].color = { r, g, b };
         }
-      }*/
+      }
       // Set the state to DISPLAYING
       m_State = State::DISPLAYING;
     }   
