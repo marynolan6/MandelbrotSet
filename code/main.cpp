@@ -1,9 +1,4 @@
-// Line 85. Unsure about how to do
-//I'm not sure either since m_plane_state is a private variable
-//When I added ComplexPlane::State::Calculating the terminal gave a warning
-//that the line had no effect. 
 #include "ComplexPlane.h"
-//#include "ComplexPlane.cpp"
 #include <iostream>
 
 using namespace sf;
