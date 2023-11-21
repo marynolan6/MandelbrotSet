@@ -88,7 +88,7 @@ while (window.isOpen())
 			}
 
 			//Set state to CALCULATING here
-			ComplexPlane::State::CALCULATING;
+			//ComplexPlane::State::CALCULATING;
 	    }
 
         if (event.type == sf::Event::MouseMoved)
