@@ -77,7 +77,7 @@ void ComplexPlane::updateRender()
 
     if (m_State == State::CALCULATING)
     {
-        /*for(int i = 0; i < m_pixelHeight; i+=3)
+        for(int i = 0; i < m_pixelHeight; i+=3)
         {
             thread t1(&ComplexPlane::processRow, *this, i);
             thread t2(&ComplexPlane::processRow, *this, i+1);
@@ -88,9 +88,9 @@ void ComplexPlane::updateRender()
             t3.join();
             t4.join();
 
-        }*/
+        }
       // Create a double for loop to loop through all pixels in the screen height and width
-        for (int i = 0; i < m_pixelHeight; ++i)
+        /*for (int i = 0; i < m_pixelHeight; ++i)
         {
             for (int j = 0; j < m_pixelWidth; ++j)
         {
@@ -113,7 +113,7 @@ void ComplexPlane::updateRender()
           // Set the color variable in the element of VertexArray that corresponds to the screen coordinate j,i
           m_vArray[j + i * m_pixelWidth].color = { r, g, b };
         }
-      }
+      }*/
       // Set the state to DISPLAYING
       m_State = State::DISPLAYING;
     }   
