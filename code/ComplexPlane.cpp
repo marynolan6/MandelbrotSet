@@ -12,16 +12,16 @@ ComplexPlane::ComplexPlane(int pixelWidth, int pixelHeight)
     // assign m_pixelWidth with the parameter values
     m_pixelWidth = pixelWidth;
     m_pixelHeight = pixelHeight;
-    
+
     // Calculate and assign the aspect ratio of the monitor, m_aspectRatio - makes sure it outputs a float
     m_aspectRatio = static_cast<float>(m_pixelHeight) / static_cast<float>(m_pixelWidth);
-  
+
     // Assign m_plane_center with {0,0} - float of 0.0
     m_plane_center = { 0.0f, 0.0f };
-  
+
     // Assign m_plane_size with {BASE_WIDTH, BASE_HEIGHT * m_aspectRatio}
     m_plane_size = { BASE_WIDTH, BASE_HEIGHT * m_aspectRatio };
-  
+
     // Assign m_zoomCount with 0
     m_zoomCount = 0;
 
@@ -30,7 +30,7 @@ ComplexPlane::ComplexPlane(int pixelWidth, int pixelHeight)
 
     // Initialize VertexArray - draws color for each pixel - set primitive type to Points
     m_vArray.setPrimitiveType(Points);
-  
+
     // Resize it to pixelWidth * pixelHeight
     m_vArray.resize(m_pixelWidth * m_pixelHeight);
 }
@@ -41,82 +41,109 @@ void ComplexPlane::draw(RenderTarget& target, RenderStates states) const
     target.draw(m_vArray);
 }
 
-void ComplexPlane::processRow(int i)
+void ComplexPlane::processRow(int a, int b)
 {
-    cout << i << endl;
-       for (int j = 0; j < m_pixelWidth; ++j)
+    //cout << k << endl;
+    for (int i = a; i < b; i++)
+    {
+        for (int j = 0; j < m_pixelWidth; ++j)
         {
-          // Set the position variable in the element of VertexArray that corresponds to the screen coordinate j,i 
-          // mapping the two-dimensional position at j,i to its 1D array 
-          m_vArray[j + i * m_pixelWidth].position = { (float)j,(float)i };
-             
-          // Use ComplexPlane::mapPixelToCoords to find the Vector2f coordinate in the complex plane
-          Vector2f coord = mapPixelToCoords(Vector2i(j, i));
-            
-          // Call ComplexPlane::countIterations with the Vector2f coordinate as its argument
-          size_t iterations = countIterations(coord);
-        
-          // store the RGB values for the current pixel
-          Uint8 r, g, b;
-        
-          // pass iterations & RGB values by reference
-          iterationsToRGB(iterations, r, g, b);
+            // Set the position variable in the element of VertexArray that corresponds to the screen coordinate j,i 
+            // mapping the two-dimensional position at j,i to its 1D array 
+            m_vArray[j + i * m_pixelWidth].position = { (float)j,(float)i };
 
-          // Set the color variable in the element of VertexArray that corresponds to the screen coordinate j,i
-          m_vArray[j + i * m_pixelWidth].color = { r, g, b };
+            // Use ComplexPlane::mapPixelToCoords to find the Vector2f coordinate in the complex plane
+            Vector2f coord = mapPixelToCoords(Vector2i(j, i));
+
+            // Call ComplexPlane::countIterations with the Vector2f coordinate as its argument
+            size_t iterations = countIterations(coord);
+
+            // store the RGB values for the current pixel
+            Uint8 r, g, b;
+
+            // pass iterations & RGB values by reference
+            iterationsToRGB(iterations, r, g, b);
+
+            // Set the color variable in the element of VertexArray that corresponds to the screen coordinate j,i
+            m_vArray[j + i * m_pixelWidth].color = { r, g, b };
         }
+    }
 }
 
 // updating the rendering of the Mandelbrot set
 void ComplexPlane::updateRender()
 {
     unsigned int nthreads = std::thread::hardware_concurrency();
-    cout << nthreads << endl;
+    //cout << nthreads << endl;
     //sf::Thread thread(&ComplexPlane::countIterations);
     //thread.launch();
 
     if (m_State == State::CALCULATING)
     {
-        for(int i = 0; i < m_pixelHeight; i+=3)
-        {
-            thread t1(&ComplexPlane::processRow, *this, i);
-            thread t2(&ComplexPlane::processRow, *this, i+1);
-            thread t3(&ComplexPlane::processRow, *this, i+2);
-            thread t4(&ComplexPlane::processRow, *this, i+3);
-            t1.join();
-            t2.join();
-            t3.join();
-            t4.join();
 
-        }
-      // Create a double for loop to loop through all pixels in the screen height and width
+        /*thread t1(&ComplexPlane::processRow, this, 0, m_pixelHeight / 4);
+        thread t2(&ComplexPlane::processRow, this, m_pixelHeight / 4, m_pixelHeight/2);
+        thread t3(&ComplexPlane::processRow, this, m_pixelHeight / 2, 3 * m_pixelHeight / 4);
+        thread t4(&ComplexPlane::processRow, this, 3 * m_pixelHeight / 4, m_pixelHeight);
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();*/
+
+        thread t1(&ComplexPlane::processRow, this, 0, m_pixelHeight / 12);
+        thread t2(&ComplexPlane::processRow, this, m_pixelHeight / 12, 2 * m_pixelHeight / 12);
+        thread t3(&ComplexPlane::processRow, this, 2 * m_pixelHeight / 12, 3 * m_pixelHeight / 12);
+        thread t4(&ComplexPlane::processRow, this, 3 * m_pixelHeight / 12, 4 * m_pixelHeight / 12);
+        thread t5(&ComplexPlane::processRow, this, 4 * m_pixelHeight / 12, 5 * m_pixelHeight / 12);
+        thread t6(&ComplexPlane::processRow, this, 5 * m_pixelHeight / 12, 6 * m_pixelHeight / 12);
+        thread t7(&ComplexPlane::processRow, this, 6 * m_pixelHeight / 12 , 7 * m_pixelHeight / 12);
+        thread t8(&ComplexPlane::processRow, this, 7 * m_pixelHeight / 12, 8 * m_pixelHeight / 12);
+        thread t9(&ComplexPlane::processRow, this, 8 * m_pixelHeight / 12, 9 * m_pixelHeight / 12);
+        thread t10(&ComplexPlane::processRow, this, 9 * m_pixelHeight / 12, 10 * m_pixelHeight / 12);
+        thread t11(&ComplexPlane::processRow, this, 10 * m_pixelHeight / 12, 11 * m_pixelHeight / 12);
+        thread t12(&ComplexPlane::processRow, this, 11 * m_pixelHeight / 12, m_pixelHeight);
+
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();
+        t5.join();
+        t6.join();
+        t7.join();
+        t8.join();
+        t9.join();
+        t10.join();
+        t11.join();
+        t12.join();
+
+        // does the same as above...but slower
         /*for (int i = 0; i < m_pixelHeight; ++i)
         {
             for (int j = 0; j < m_pixelWidth; ++j)
-        {
-          // Set the position variable in the element of VertexArray that corresponds to the screen coordinate j,i 
-          // mapping the two-dimensional position at j,i to its 1D array 
-          m_vArray[j + i * m_pixelWidth].position = { (float)j,(float)i };
-             
-          // Use ComplexPlane::mapPixelToCoords to find the Vector2f coordinate in the complex plane
-          Vector2f coord = mapPixelToCoords(Vector2i(j, i));
-            
-          // Call ComplexPlane::countIterations with the Vector2f coordinate as its argument
-          size_t iterations = countIterations(coord);
-        
-          // store the RGB values for the current pixel
-          Uint8 r, g, b;
-        
-          // pass iterations & RGB values by reference
-          iterationsToRGB(iterations, r, g, b);
+            {
+            // Set the position variable in the element of VertexArray that corresponds to the screen coordinate j,i
+            // mapping the two-dimensional position at j,i to its 1D array
+            m_vArray[j + i * m_pixelWidth].position = { (float)j,(float)i };
 
-          // Set the color variable in the element of VertexArray that corresponds to the screen coordinate j,i
-          m_vArray[j + i * m_pixelWidth].color = { r, g, b };
-        }
-      }*/
-      // Set the state to DISPLAYING
-      m_State = State::DISPLAYING;
-    }   
+            // Use ComplexPlane::mapPixelToCoords to find the Vector2f coordinate in the complex plane
+            Vector2f coord = mapPixelToCoords(Vector2i(j, i));
+
+            // Call ComplexPlane::countIterations with the Vector2f coordinate as its argument
+            size_t iterations = countIterations(coord);
+
+            // store the RGB values for the current pixel
+            Uint8 r, g, b;
+
+            // pass iterations & RGB values by reference
+            iterationsToRGB(iterations, r, g, b);
+
+            // Set the color variable in the element of VertexArray that corresponds to the screen coordinate j,i
+            m_vArray[j + i * m_pixelWidth].color = { r, g, b };
+            }
+        }*/
+        // Set the state to DISPLAYING
+        m_State = State::DISPLAYING;
+    }
 }
 
 // zoomIn
@@ -124,7 +151,7 @@ void ComplexPlane::zoomIn()
 {
     // Increment m_zoomCount
     ++m_zoomCount;
-  
+
     // Set a local variable for the x size to BASE_WIDTH * (BASE_ZOOM to the m_ZoomCount power)
     float newXSize = BASE_WIDTH * pow(BASE_ZOOM, m_zoomCount);
 
@@ -301,7 +328,7 @@ Vector2f ComplexPlane::mapPixelToCoords(Vector2i mousePixel)
     // Calculate the coordinates within the specified complex plane range of real/imag
     // m_plane_size.y=height - 1.0f - normalizedY=increase from top to bottom - 
     // m_plane_center.x - m_plane_size.x / 2.0f=substracting half of plane's height
-    float real = ((normalizedX) * m_plane_size.x) + (m_plane_center.x - m_plane_size.x / 2.0f);
+    float real = ((normalizedX)*m_plane_size.x) + (m_plane_center.x - m_plane_size.x / 2.0f);
     float imag = ((1.0f - normalizedY) * m_plane_size.y) + (m_plane_center.y - m_plane_size.y / 2.0f);
 
     return Vector2f(real, imag);
